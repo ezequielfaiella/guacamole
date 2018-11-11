@@ -15,6 +15,7 @@ docker-compose up -d
 
 
 
+
 #To login, go to:
 http://DOCKER_HOST:8080/guacamole/
 
