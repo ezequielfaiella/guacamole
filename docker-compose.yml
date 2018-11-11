@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:9.6
+    restart: always
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - guac
+  guacd:
+    image: guacamole/guacd:0.9.14
+    restart: always
+    networks:
+      - guac
+    ports:
+      - "4822:4822"
+  guac:
+    image: guacamole/guacamole:0.9.14
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      GUACD_PORT_4822_TCP_ADDR: guacd
+      GUACD_PORT_4822_TCP_PORT: 4822
+      GUACD_HOSTNAME: guacd
+    networks:
+      - guac
+    depends_on:
+      - postgres
+      - guacd
+    links:
+      - postgres
+      - guacd
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  guac:
+    driver: bridge
