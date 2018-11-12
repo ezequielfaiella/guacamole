@@ -3,7 +3,7 @@
 
 #run
 $ git clone https://github.com/gustonator/guacamole.git
-$ cd guacamole-docker-compose
+$ cd guacamole
 $ docker-compose -f docker-compose-<db_type>.yml up -d
 
 

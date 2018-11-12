@@ -3,7 +3,8 @@ version: '3'
 services:
   mysql:
     image: mysql:5.7
-    restart: on-failure 
+    hostname: mysql
+    restart: always 
     volumes:
       - ./init-mysql:/docker-entrypoint-initdb.d
       - ./data-mysql:/var/lib/mysql
@@ -15,6 +16,7 @@ services:
     networks:
       - guac
   guacd:
+    hostname: guacd
     image: guacamole/guacd:0.9.14
     restart: always
     networks:
@@ -32,9 +34,9 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      #GUACD_PORT_3306_TCP_ADDR: guacd
-      #GUACD_PORT_3306_TCP_PORT: 3306
       GUACD_HOSTNAME: guacd
+      GUACD_PORT_4822_TCP_ADDR: guacd
+      GUACD_PORT_4822_TCP_PORT: 4822
     networks:
       - guac
     depends_on:
